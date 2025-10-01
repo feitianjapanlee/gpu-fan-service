@@ -38,6 +38,7 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 while :; do
+  # 複数枚のGPUの場合は一番高い温度を取得する
   GPU_TEMP="$(nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits 2>/dev/null | awk 'BEGIN{max=0} {if ($1>max) max=$1} END{print max}')"
   if [[ "$GPU_TEMP" =~ ^[0-9]+$ ]]; then
     if [ "$GPU_TEMP" -gt "$TEMP_THRESHOLD" ]; then
